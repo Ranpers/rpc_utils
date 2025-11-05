@@ -1,0 +1,45 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Compiled files
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Note: lib/librpc.a is kept in the repository as a dependency
+# Ignore .a files only in build directories
+build/*.a
+build-*/*.a
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated files
+*.log
+core
+*.core
+
+# Executables
+example_server
+example_client
+my_server
+my_client
+
+# Dependencies
+*.d
