@@ -10,13 +10,19 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# 设置rpclib路径（现在在本地）
-set(RPCLIB_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
-set(RPCLIB_LIBS "${CMAKE_CURRENT_SOURCE_DIR}/lib/librpc.a")
+# 设置rpclib路径（从external目录）
+set(RPCLIB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/external/rpclib")
+set(RPCLIB_INCLUDE_DIR "${RPCLIB_ROOT}/include")
+set(RPCLIB_BUILD_DIR "${RPCLIB_ROOT}/build")
+set(RPCLIB_LIBS "${RPCLIB_BUILD_DIR}/librpc.a")
 
 # 检查rpclib是否存在
 if(NOT EXISTS "${RPCLIB_INCLUDE_DIR}/rpc/client.h")
-    message(FATAL_ERROR "rpclib not found at ${RPCLIB_INCLUDE_DIR}")
+    message(FATAL_ERROR "rpclib not found at ${RPCLIB_INCLUDE_DIR}. Please run build.sh to setup rpclib.")
+endif()
+
+if(NOT EXISTS "${RPCLIB_LIBS}")
+    message(FATAL_ERROR "rpclib library not found at ${RPCLIB_LIBS}. Please run build.sh to build rpclib.")
 endif()
 
 # 查找Threads库

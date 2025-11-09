@@ -14,16 +14,20 @@
 - ⏱️ **性能计时** - 高精度计时器，方便性能分析
 - 🛡️ **异常安全** - 完善的错误处理和异常封装
 - 🔧 **灵活配置** - 支持多种编译器和构建选项
-- 📦 **开箱即用** - 已集成 rpclib，无需额外依赖
+- 📦 **自动依赖管理** - 构建时自动拉取并编译最新 rpclib
 
 ## 🚀 快速开始
 
 ### 1. 构建项目
 
+构建脚本会自动拉取最新的 rpclib 并使用相同的编译器参数构建：
+
 ```bash
 cd /workspaces/te/confidential_computing/rpc_utils
 ./build.sh
 ```
+
+> 💡 **注意**: 首次构建时会自动克隆 rpclib 仓库到 `external/rpclib` 目录，后续构建会更新到最新版本。
 
 ### 2. 启动服务器
 
@@ -47,24 +51,23 @@ cd build
 
 ```
 rpc_utils/
-├── include/                      # 头文件目录
-│   ├── rpc/                     # rpclib 头文件（已集成）
-│   ├── rpc_client_wrapper.h     # 客户端封装
-│   ├── rpc_server_wrapper.h     # 服务器封装
-│   └── rpc_utils.h              # 工具类（日志、计时器）
-├── lib/                         # 库文件目录
-│   └── librpc.a                 # rpclib 静态库
-├── src/                         # 源代码目录
-│   ├── client/                  # 客户端实现
-│   ├── server/                  # 服务器实现
-│   └── common/                  # 公共工具实现
-├── examples/                    # 示例程序
+├── external/                    # 外部依赖（自动管理，已加入 .gitignore）
+│   └── rpclib/                 # rpclib 源码（构建时自动拉取）
+├── include/                     # 头文件目录
+│   ├── rpc_client_wrapper.h    # 客户端封装
+│   ├── rpc_server_wrapper.h    # 服务器封装
+│   └── rpc_utils.h             # 工具类（日志、计时器）
+├── src/                        # 源代码目录
+│   ├── client/                 # 客户端实现
+│   ├── server/                 # 服务器实现
+│   └── common/                 # 公共工具实现
+├── examples/                   # 示例程序
 │   ├── example_server.cpp
 │   └── example_client.cpp
-├── build.sh                     # 构建脚本
-├── CMakeLists.txt              # CMake 配置
-├── README.md                   # 本文档
-└── QUICKSTART.md               # 快速入门指南
+├── build.sh                    # 构建脚本（自动拉取并构建 rpclib）
+├── CMakeLists.txt             # CMake 配置
+├── README.md                  # 本文档
+└── QUICKSTART.md              # 快速入门指南
 ```
 
 ## 🎯 核心组件
@@ -107,7 +110,8 @@ rpc_utils/
   - GCC/G++ 7.0+
   - Clang/Clang++ 5.0+
 - **构建工具**: CMake 3.10+
-- **依赖库**: rpclib（已内置）
+- **网络工具**: Git（用于拉取 rpclib）
+- **依赖库**: rpclib（构建时自动拉取）
 
 ### 方式一：使用构建脚本（推荐）
 

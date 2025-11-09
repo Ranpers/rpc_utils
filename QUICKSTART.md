@@ -8,6 +8,7 @@
 cd /workspaces/te/confidential_computing/rpc_utils
 
 # 使用默认编译器（occlum-gcc/occlum-g++）
+# 构建脚本会自动拉取最新的 rpclib 并使用相同的编译器参数构建
 ./build.sh
 
 # 或者使用系统gcc/g++编译器
@@ -20,8 +21,17 @@ cd /workspaces/te/confidential_computing/rpc_utils
 ./build.sh --help
 ```
 
+> 💡 **首次构建**: 会自动克隆 rpclib 仓库到 `external/rpclib` 目录  
+> 💡 **后续构建**: 会自动更新 rpclib 到最新版本
+
 等待编译完成，应该看到：
 ```
+[INFO] Setting up rpclib...
+[INFO] Cloning rpclib repository... (首次构建)
+或
+[INFO] Updating rpclib repository... (后续构建)
+[INFO] Building rpclib with same compiler settings...
+[INFO] rpclib built successfully
 [INFO] Build completed successfully!
 ```
 
@@ -94,15 +104,17 @@ int main() {
 # 服务器
 occlum-g++ -std=c++14 my_server.cpp \
     -I../include \
+    -I../external/rpclib/include \
     -L. -lrpc_utils_server -lrpc_utils_common \
-    -L../lib -lrpc \
+    -L../external/rpclib/build -lrpc \
     -lpthread -o my_server
 
 # 客户端
 occlum-g++ -std=c++14 my_client.cpp \
     -I../include \
+    -I../external/rpclib/include \
     -L. -lrpc_utils_client -lrpc_utils_common \
-    -L../lib -lrpc \
+    -L../external/rpclib/build -lrpc \
     -lpthread -o my_client
 ```
 
@@ -155,17 +167,18 @@ rpc_utils::Logger::info("Computation took " +
 ## 故障排查
 
 ### 问题1: 编译错误 "rpc/client.h not found"
-**解决**: 检查include/rpc目录是否存在
+**解决**: 确保已运行 build.sh 脚本，它会自动拉取并构建 rpclib
 ```bash
-ls include/rpc/client.h
+./build.sh
+ls external/rpclib/include/rpc/client.h
 ```
-如果不存在，需要确保rpc头文件已复制到include/目录
 
 ### 问题2: 链接错误 "cannot find -lrpc"
-**解决**: 检查librpc.a是否存在
+**解决**: 检查 rpclib 是否已构建
 ```bash
-ls lib/librpc.a
+ls external/rpclib/build/librpc.a
 ```
+如果不存在，运行 `./build.sh` 重新构建
 
 ### 问题2: 运行时错误 "Connection refused"
 **解决**: 确保服务器已启动并监听正确端口

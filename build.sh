@@ -124,16 +124,41 @@ if ! command -v "$CXX_COMPILER" &> /dev/null; then
     exit 1
 fi
 
-# 检查rpclib库是否存在
-RPCLIB_LIB="${SCRIPT_DIR}/lib/librpc.a"
+# 拉取并构建rpclib
+RPCLIB_DIR="${SCRIPT_DIR}/external/rpclib"
 
-if [ ! -f "${RPCLIB_LIB}" ]; then
-    print_error "rpclib not found at ${RPCLIB_LIB}"
-    print_error "Please ensure librpc.a is in the lib/ directory"
-    exit 1
+print_info "Setting up rpclib..."
+
+# 创建external目录
+mkdir -p "${SCRIPT_DIR}/external"
+
+# 克隆或更新rpclib
+if [ -d "${RPCLIB_DIR}" ]; then
+    print_info "Updating rpclib repository..."
+    cd "${RPCLIB_DIR}"
+    git fetch origin
+    git pull origin master || git pull origin main
 else
-    print_info "Found rpclib at ${RPCLIB_LIB}"
+    print_info "Cloning rpclib repository..."
+    git clone https://github.com/rpclib/rpclib.git "${RPCLIB_DIR}"
+    cd "${RPCLIB_DIR}"
 fi
+
+# 构建rpclib
+print_info "Building rpclib with same compiler settings..."
+RPCLIB_BUILD_DIR="${RPCLIB_DIR}/build"
+rm -rf "${RPCLIB_BUILD_DIR}"
+mkdir -p "${RPCLIB_BUILD_DIR}"
+cd "${RPCLIB_BUILD_DIR}"
+
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+         -DCMAKE_C_COMPILER="$C_COMPILER" \
+         -DCMAKE_CXX_COMPILER="$CXX_COMPILER" \
+         -DCMAKE_CXX_STANDARD=14
+
+make -j$(nproc)
+
+print_info "rpclib built successfully"
 
 # 返回到项目目录
 cd "${SCRIPT_DIR}"

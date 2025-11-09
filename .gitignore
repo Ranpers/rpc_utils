@@ -3,6 +3,9 @@ build/
 build-*/
 cmake-build-*/
 
+# External dependencies
+external/
+
 # CMake files
 CMakeCache.txt
 CMakeFiles/
@@ -13,14 +16,10 @@ Makefile
 # Compiled files
 *.o
 *.so
+*.a
 *.dylib
 *.dll
 *.exe
-
-# Note: lib/librpc.a is kept in the repository as a dependency
-# Ignore .a files only in build directories
-build/*.a
-build-*/*.a
 
 # IDE files
 .vscode/
