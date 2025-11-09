@@ -6,7 +6,18 @@
 
 ```bash
 cd /workspaces/te/confidential_computing/rpc_utils
+
+# 使用默认编译器（occlum-gcc/occlum-g++）
 ./build.sh
+
+# 或者使用系统gcc/g++编译器
+./build.sh --compiler=gcc
+
+# 或者使用clang编译器
+./build.sh --compiler=clang
+
+# 查看所有可用选项
+./build.sh --help
 ```
 
 等待编译完成，应该看到：

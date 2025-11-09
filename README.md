@@ -63,6 +63,36 @@ rpc_utils/
 
 ### 构建步骤
 
+#### 方式1：使用构建脚本（推荐）
+
+```bash
+# 进入rpc_utils目录
+cd /workspaces/te/confidential_computing/rpc_utils
+
+# 使用默认编译器（occlum-gcc/occlum-g++）
+./build.sh
+
+# 清理并重新构建
+./build.sh clean
+
+# 使用系统gcc/g++编译器
+./build.sh --compiler=gcc
+
+# 使用clang/clang++编译器
+./build.sh --compiler=clang
+
+# 显式指定编译器路径
+./build.sh --cc=/usr/bin/gcc-9 --cxx=/usr/bin/g++-9
+
+# 清理并使用gcc编译器
+./build.sh clean --compiler=gcc
+
+# 查看帮助信息
+./build.sh --help
+```
+
+#### 方式2：手动使用CMake
+
 ```bash
 # 1. 进入rpc_utils目录
 cd /workspaces/te/confidential_computing/rpc_utils
@@ -71,8 +101,14 @@ cd /workspaces/te/confidential_computing/rpc_utils
 mkdir -p build
 cd build
 
-# 3. 配置CMake
+# 3. 配置CMake（使用默认系统编译器）
 cmake ..
+
+# 或显式指定编译器
+cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+
+# 或使用Occlum编译器
+cmake -DCMAKE_C_COMPILER=occlum-gcc -DCMAKE_CXX_COMPILER=occlum-g++ ..
 
 # 4. 编译
 make
@@ -87,18 +123,47 @@ make
 
 ### 编译选项
 
+#### 使用build.sh脚本的选项
+
+```bash
+# 指定编译器类型
+./build.sh --compiler=occlum    # 使用Occlum编译器（默认）
+./build.sh --compiler=gcc       # 使用系统gcc/g++
+./build.sh --compiler=clang     # 使用clang/clang++
+
+# 显式指定编译器路径
+./build.sh --cc=gcc --cxx=g++
+
+# 清理构建
+./build.sh clean
+
+# 组合使用
+./build.sh clean --compiler=gcc
+```
+
+#### 使用CMake的选项
+
 ```bash
 # 方式1: 使用标准编译器
 cmake ..
 
-# 方式2: 显式使用Occlum编译器（推荐）
+# 方式2: 显式使用Occlum编译器（用于机密计算环境）
 cmake -DCMAKE_C_COMPILER=occlum-gcc -DCMAKE_CXX_COMPILER=occlum-g++ ..
+
+# 方式3: 使用系统gcc/g++
+cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+
+# 方式4: 使用clang/clang++
+cmake -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..
 
 # 不编译示例程序
 cmake -DBUILD_EXAMPLES=OFF ..
 
 # 指定安装路径
 cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
+
+# 组合选项
+cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DBUILD_EXAMPLES=ON ..
 ```
 
 ## 使用示例

@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(rpc_utils VERSION 1.0.0 LANGUAGES CXX)
 
-# 设置使用Occlum编译器
-set(CMAKE_C_COMPILER "occlum-gcc")
-set(CMAKE_CXX_COMPILER "occlum-g++")
+# 注意：编译器应该通过 build.sh 脚本或 cmake 命令行参数指定
+# 例如: cmake -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
+# 或使用: ./build.sh --compiler=gcc
 
 # 设置C++标准
 set(CMAKE_CXX_STANDARD 14)
